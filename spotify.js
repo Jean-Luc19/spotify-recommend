@@ -1,4 +1,4 @@
-var getFromApi = function (endpoint, query) {
+const getFromApi = function (endpoint, query) {
   const url = new URL(`https://api.spotify.com/v1/${endpoint}`);
   Object.keys(query).forEach(key => url.searchParams.append(key, query[key]));
   return fetch(url).then(function (response) {
@@ -10,7 +10,8 @@ var getFromApi = function (endpoint, query) {
 };
 
 
-var artist;
-var getArtist = function (name) {
+const artist;
+const getArtist = function (name) {
   // Edit me!
 };
+//fetch(url).then(res => res.json()).then( /* actually do stuff! */);
