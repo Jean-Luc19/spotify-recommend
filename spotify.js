@@ -1,4 +1,4 @@
- const getFromApi = function (endpoint, query) {
+ const getFromApi = function (endpoint, query={}) {
    const url = new URL(`https://api.spotify.com/v1/${endpoint}`);
    Object.keys(query).forEach(key => url.searchParams.append(key, query[key]));
    return fetch(url).then(function (response) {
@@ -9,7 +9,7 @@
    });
  };
 
-
+ let artist = {};
  const getArtist = function (name) {
    //Make a call to the search endpoint using the getFromApi function.
    const query = {
@@ -19,10 +19,15 @@
    }
    let endpoint = 'search';
    return getFromApi(endpoint, query).then(response => {
-     let artist = response.artists.items[0];
+     artist = response.artists.items[0];
      return artist;
-     }).catch(err => {
-     console.error(err);
+     }).then(response =>{
+       let endpoint = `artists/${artist.id}/related-artists`;
+      return getFromApi(endpoint)
+    }).then(response => {
+      console.log(response)
+    }).catch(err => {
+     console.error(err)
    });
 
 //
