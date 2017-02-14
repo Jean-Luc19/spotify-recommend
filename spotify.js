@@ -21,9 +21,11 @@
    return getFromApi(endpoint, query).then(response => {
      let artist = response.artists.items[0];
      return artist;
+     }).catch(err => {
+     console.error(err);
+   });
 
-   })
-
+//
  };
 //Use .then to add a callback which will run when getFromApi resolves.
 
