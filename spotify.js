@@ -19,22 +19,29 @@
    }
    let endpoint = 'search';
    return getFromApi(endpoint, query)
-   .then(response => {
-     artist = response.artists.items[0];
-     endpoint = `artists/${artist.id}/related-artists`;
-     return getFromApi(endpoint);
-   })
-   .then(response => {
-     console.log(response);
-     artist.related = response.artists;
-     return artist;
-   })
+     .then(response => {
+       artist = response.artists.items[0];
+       endpoint = `artists/${artist.id}/related-artists`;
+       return getFromApi(endpoint);
+     })
+     .then(response => {
+       artist.related = response.artists;
+       let allPromises = artist.related.map(item => {
+         endpoint = `artists/${item.id}/top-tracks?country=us`;
+         return getFromApi(endpoint);
+       });
+       return Promise.all(allPromises);
+     })
+     .then((response) => {
+       response.forEach((item, i) => {
+         artist.related[i].tracks = item.tracks;
 
-   .catch(err => {
-     console.error(err)
-   });
-
-   //
+       })
+       return artist;
+     })
+     .catch(err => {
+       console.error(err)
+     });
  };
  //Use .then to add a callback which will run when getFromApi resolves.
 
