@@ -1,4 +1,4 @@
- const getFromApi = function (endpoint, query={}) {
+ const getFromApi = function (endpoint, query = {}) {
    const url = new URL(`https://api.spotify.com/v1/${endpoint}`);
    Object.keys(query).forEach(key => url.searchParams.append(key, query[key]));
    return fetch(url).then(function (response) {
@@ -18,21 +18,25 @@
      type: 'artist'
    }
    let endpoint = 'search';
-   return getFromApi(endpoint, query).then(response => {
+   return getFromApi(endpoint, query)
+   .then(response => {
      artist = response.artists.items[0];
+     endpoint = `artists/${artist.id}/related-artists`;
+     return getFromApi(endpoint);
+   })
+   .then(response => {
+     console.log(response);
+     artist.related = response.artists;
      return artist;
-     }).then(response =>{
-       let endpoint = `artists/${artist.id}/related-artists`;
-      return getFromApi(endpoint)
-    }).then(response => {
-      console.log(response)
-    }).catch(err => {
+   })
+
+   .catch(err => {
      console.error(err)
    });
 
-//
+   //
  };
-//Use .then to add a callback which will run when getFromApi resolves.
+ //Use .then to add a callback which will run when getFromApi resolves.
 
 
-//fetch(url).then(res => res.json()).then( /* actually do stuff! */);
+ //fetch(url).then(res => res.json()).then( /* actually do stuff! */);
